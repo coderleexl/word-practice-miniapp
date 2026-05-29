@@ -1,0 +1,19 @@
+<view class="page result-page">
+  <view class="result-hero">
+    <text class="score">{{result.score}}</text>
+    <text class="score-unit">分</text>
+    <text class="summary">{{result.correctCount}} / {{result.total}} 答对</text>
+  </view>
+
+  <view class="panel">
+    <view class="section-title">错题复习</view>
+    <view wx:if="{{wrongQuestions.length === 0}}" class="empty">本轮没有错题</view>
+    <view wx:for="{{wrongQuestions}}" wx:key="id" class="wrong-row">
+      <text class="word">{{item.word.word}}</text>
+      <text class="meaning">{{item.word.meaning}}</text>
+    </view>
+  </view>
+
+  <button class="primary-button" bindtap="again">再练一次</button>
+  <button class="secondary-button" bindtap="backHome">返回首页</button>
+</view>

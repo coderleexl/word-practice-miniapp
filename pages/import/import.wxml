@@ -1,0 +1,22 @@
+<view class="page import-page">
+  <view class="panel">
+    <text class="title">教材导入</text>
+    <text class="desc">一期先放入本地示例词表。后续会支持粘贴文本、CSV 导入和云端保存。</text>
+  </view>
+
+  <view class="panel">
+    <view class="section-title">CSV 字段</view>
+    <view wx:for="{{fields}}" wx:key="name" class="field-row">
+      <text class="field-name">{{item.name}}</text>
+      <text class="field-desc">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <view class="panel sample">
+    <view class="section-title">示例</view>
+    <text class="code">book,unit,word,phonetic,meaning,example</text>
+    <text class="code">示例教材,Unit 1,apple,/ˈæpəl/,苹果,I eat an apple every day.</text>
+  </view>
+
+  <button class="primary-button" bindtap="backHome">返回首页</button>
+</view>

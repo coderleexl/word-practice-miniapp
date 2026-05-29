@@ -1,0 +1,33 @@
+<view class="page practice-page">
+  <view class="progress">
+    <text>{{currentIndex + 1}} / {{questions.length}}</text>
+    <view class="progress-track">
+      <view class="progress-bar" style="width: {{progressPercent}}%;"></view>
+    </view>
+  </view>
+
+  <view class="panel question-card">
+    <text class="question-type">{{currentQuestion.typeLabel}}</text>
+    <text class="question-title">{{currentQuestion.prompt}}</text>
+    <text class="question-hint">{{currentQuestion.hint}}</text>
+  </view>
+
+  <view class="options">
+    <button
+      wx:for="{{currentQuestion.options}}"
+      wx:key="value"
+      class="option {{selectedValue === item.value ? 'selected' : ''}}"
+      bindtap="selectOption"
+      data-value="{{item.value}}"
+    >
+      {{item.label}}
+    </button>
+  </view>
+
+  <view wx:if="{{feedback}}" class="feedback {{feedback.correct ? 'right' : 'wrong'}}">
+    <text class="feedback-title">{{feedback.title}}</text>
+    <text class="feedback-detail">{{feedback.detail}}</text>
+  </view>
+
+  <button class="primary-button" bindtap="submitOrNext">{{buttonText}}</button>
+</view>

@@ -1,0 +1,42 @@
+<view class="page index-page">
+  <view class="hero">
+    <view>
+      <text class="eyebrow">示例教材 · Unit 1</text>
+      <text class="title">今日单词练习</text>
+      <text class="subtitle">用 5 道题快速完成一次教材单元复习。</text>
+    </view>
+    <view class="score-box">
+      <text class="score-number">{{wordCount}}</text>
+      <text class="score-label">词</text>
+    </view>
+  </view>
+
+  <view class="stats">
+    <view class="stat">
+      <text class="stat-value">{{wordCount}}</text>
+      <text class="stat-label">本单元词数</text>
+    </view>
+    <view class="stat">
+      <text class="stat-value">5</text>
+      <text class="stat-label">练习题</text>
+    </view>
+    <view class="stat">
+      <text class="stat-value">{{lastScore}}</text>
+      <text class="stat-label">上次得分</text>
+    </view>
+  </view>
+
+  <button class="primary-button" bindtap="startPractice">开始练习</button>
+  <button class="secondary-button import-button" bindtap="goImport">导入教材</button>
+
+  <view class="panel word-panel">
+    <view class="section-title">本单元词表</view>
+    <view wx:for="{{words}}" wx:key="id" class="word-row">
+      <view>
+        <text class="word">{{item.word}}</text>
+        <text class="phonetic">{{item.phonetic}}</text>
+      </view>
+      <text class="meaning">{{item.meaning}}</text>
+    </view>
+  </view>
+</view>

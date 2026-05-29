@@ -1,0 +1,61 @@
+.import-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.title,
+.desc,
+.code {
+  display: block;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 800;
+  margin-bottom: 16rpx;
+}
+
+.desc {
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  margin-bottom: 14rpx;
+}
+
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  border-top: 1rpx solid #eef2f7;
+}
+
+.field-row:first-of-type {
+  border-top: 0;
+}
+
+.field-name {
+  font-weight: 800;
+}
+
+.field-desc {
+  color: #6b7280;
+}
+
+.sample {
+  overflow: hidden;
+}
+
+.code {
+  padding: 16rpx;
+  border-radius: 10rpx;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 22rpx;
+  line-height: 1.6;
+  margin-top: 12rpx;
+}
