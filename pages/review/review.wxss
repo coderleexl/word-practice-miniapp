@@ -1,0 +1,110 @@
+.review-page {
+  padding: 24rpx 32rpx;
+}
+
+.page-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+  margin-bottom: 24rpx;
+}
+
+.tab-bar {
+  display: flex;
+  background: #ffffff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  margin-bottom: 24rpx;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #777777;
+  font-weight: 600;
+}
+
+.tab.active {
+  background: #58CC02;
+  color: #ffffff;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #777777;
+  font-size: 28rpx;
+}
+
+.review-card {
+  margin-bottom: 16rpx;
+}
+
+.review-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8rpx;
+}
+
+.word-text {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.word-phonetic {
+  display: block;
+  font-size: 24rpx;
+  color: #777777;
+}
+
+.word-meaning {
+  display: block;
+  font-size: 28rpx;
+  color: #3C3C3C;
+  margin-bottom: 12rpx;
+}
+
+.review-meta {
+  display: flex;
+  gap: 24rpx;
+  font-size: 24rpx;
+  color: #777777;
+}
+
+.review-actions {
+  margin-top: 12rpx;
+}
+
+.action-link {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1CB0F6;
+}
+
+.mastered-badge {
+  font-size: 24rpx;
+  color: #58CC02;
+  font-weight: 700;
+}
+
+.priority-badge {
+  font-size: 24rpx;
+  color: #FF4B4B;
+  font-weight: 700;
+  background: #fff0f0;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.review-high {
+  border-left: 6rpx solid #FF4B4B;
+}
+
+.review-hint {
+  color: #1CB0F6;
+}

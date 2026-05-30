@@ -1,0 +1,154 @@
+.stats-page {
+  padding: 24rpx 32rpx;
+}
+
+.page-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+}
+
+/* 统计网格 */
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 120rpx;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #58CC02;
+}
+
+.stat-value.text-error {
+  color: #FF4B4B;
+}
+
+.stat-label {
+  display: block;
+  font-size: 22rpx;
+  color: #777777;
+  margin-top: 4rpx;
+}
+
+/* 趋势图 */
+.trend-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200rpx;
+  padding-top: 20rpx;
+}
+
+.trend-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.trend-bar {
+  width: 40rpx;
+  background: #E5E5E5;
+  border-radius: 8rpx 8rpx 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.trend-bar-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #58CC02;
+  border-radius: 8rpx 8rpx 0 0;
+  transition: height 0.3s;
+}
+
+.trend-label {
+  font-size: 20rpx;
+  color: #777777;
+}
+
+.trend-count {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #3C3C3C;
+}
+
+/* 教材统计 */
+.book-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.book-stat-row:last-child {
+  border-bottom: none;
+}
+
+.book-stat-info {
+  flex: 1;
+}
+
+.book-stat-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.book-stat-meta {
+  display: block;
+  font-size: 22rpx;
+  color: #777777;
+  margin-top: 4rpx;
+}
+
+.book-stat-progress {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  width: 200rpx;
+}
+
+.progress-mini {
+  flex: 1;
+  height: 12rpx;
+  background: #E5E5E5;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.progress-mini-fill {
+  height: 100%;
+  background: #58CC02;
+  border-radius: 999rpx;
+  transition: width 0.3s;
+}
+
+.book-stat-accuracy {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #58CC02;
+  min-width: 60rpx;
+  text-align: right;
+}

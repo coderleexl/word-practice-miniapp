@@ -1,0 +1,136 @@
+<view class="page exam-page">
+
+  <!-- ── 配置阶段 ── -->
+  <view wx:if="{{phase === 'config'}}">
+    <text class="page-title">模拟测试</text>
+    <text class="page-subtitle">选择范围，生成一套模拟试卷。</text>
+
+    <view class="card">
+      <text class="section-title">选择教材</text>
+      <view class="chip-row">
+        <view wx:for="{{books}}" wx:key="_id"
+          class="chip {{selectedBookId === item._id ? 'chip-active' : ''}}"
+          bindtap="selectBook" data-id="{{item._id}}"
+        >{{item.name}}</view>
+        <view wx:if="{{books.length === 0}}" class="empty-hint">暂无教材</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-header">
+        <text class="section-title">选择单元</text>
+        <text class="select-all" bindtap="selectAllUnits">全选</text>
+      </view>
+      <view class="chip-row">
+        <view wx:for="{{units}}" wx:key="_id"
+          class="chip {{selectedUnitIds.indexOf(item._id) >= 0 ? 'chip-active' : ''}}"
+          bindtap="toggleUnit" data-id="{{item._id}}"
+        >{{item.name}}</view>
+        <view wx:if="{{units.length === 0}}" class="empty-hint">暂无单元</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="section-title">题量</text>
+      <view class="count-row">
+        <input class="count-input" type="number" value="{{questionCount}}" bindinput="onCountInput" />
+        <text class="count-hint">题（1-50）</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="section-title">题型比例</text>
+      <view class="type-ratio-list">
+        <view wx:for="{{questionTypes}}" wx:key="key" class="type-ratio-row">
+          <text class="type-ratio-name">{{item.name}}</text>
+          <view class="type-ratio-controls">
+            <text class="ratio-btn" bindtap="decreaseType" data-key="{{item.key}}">-</text>
+            <text class="type-ratio-value">{{item.ratio}}</text>
+            <text class="ratio-btn" bindtap="increaseType" data-key="{{item.key}}">+</text>
+          </view>
+        </view>
+      </view>
+      <text class="ratio-hint">数字越大，该题型出现越多</text>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="startExam">开始测试</button>
+    <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
+  </view>
+
+  <!-- ── 答题阶段 ── -->
+  <view wx:if="{{phase === 'testing'}}">
+    <view class="progress-section">
+      <text class="progress-text">{{currentIndex + 1}} / {{questions.length}}</text>
+      <view class="progress-bar-wrap">
+        <view class="progress-bar-fill progress-bar-accent" style="width: {{progressPercent}}%;"></view>
+      </view>
+    </view>
+
+    <view class="question-card card {{answered ? (feedback.correct ? 'card-correct' : 'card-wrong') : ''}}">
+      <text class="question-type">{{currentQuestion.typeLabel}}</text>
+      <text class="question-prompt">{{currentQuestion.prompt}}</text>
+      <text wx:if="{{currentQuestion.hint}}" class="question-hint">{{currentQuestion.hint}}</text>
+    </view>
+
+    <view wx:if="{{currentQuestion.type !== 'spelling'}}" class="options-area {{answered ? 'disabled' : ''}}">
+      <button
+        wx:for="{{currentQuestion.options}}"
+        wx:key="value"
+        class="option-btn {{answered && item.value === currentQuestion.answer ? 'correct' : ''}} {{answered && selectedValue === item.value && item.value !== currentQuestion.answer ? 'wrong' : ''}} {{!answered && selectedValue === item.value ? 'selected' : ''}}"
+        bindtap="selectOption"
+        data-value="{{item.value}}"
+        disabled="{{answered}}"
+      >
+        <text class="option-label">{{item.label}}</text>
+        <view class="option-icon">
+          <text wx:if="{{answered && item.value === currentQuestion.answer}}">✅</text>
+          <text wx:if="{{answered && selectedValue === item.value && item.value !== currentQuestion.answer}}">❌</text>
+        </view>
+      </button>
+    </view>
+
+    <view wx:if="{{currentQuestion.type === 'spelling'}}" class="spelling-area">
+      <view class="scrambled-box">
+        <text class="scrambled-label">打乱字母</text>
+        <text class="scrambled-letters">{{currentQuestion.scrambled}}</text>
+      </view>
+      <view class="spelling-input-row">
+        <input class="spelling-input" placeholder="输入拼写" value="{{spellingInput}}" bindinput="onSpellingInput" disabled="{{answered}}" />
+      </view>
+    </view>
+
+    <view wx:if="{{feedback}}" class="feedback-bar {{feedback.correct ? 'correct' : 'wrong'}}">
+      <text>{{feedback.detail}}</text>
+    </view>
+
+    <button wx:if="{{!answered}}" class="btn btn-primary btn-block" bindtap="submitAnswer">提交</button>
+    <button wx:if="{{answered}}" class="btn btn-accent btn-block" bindtap="nextQuestion">
+      {{currentIndex === questions.length - 1 ? '查看结果' : '下一题'}}
+    </button>
+  </view>
+
+  <!-- ── 结果阶段 ── -->
+  <view wx:if="{{phase === 'result'}}">
+    <view class="score-card card">
+      <text class="result-emoji">{{score >= 80 ? '🎉' : score >= 60 ? '💪' : '📖'}}</text>
+      <text class="result-score">{{score}}</text>
+      <text class="result-score-label">分</text>
+      <text class="result-detail">{{correctCount}} / {{total}} 答对 · 用时 {{duration}} 秒</text>
+    </view>
+
+    <view wx:if="{{wrongQuestions.length > 0}}" class="card">
+      <text class="section-title">错题回顾</text>
+      <view wx:for="{{wrongQuestions}}" wx:key="id" class="wrong-item">
+        <view class="wrong-word">
+          <text class="wrong-en">{{item.word.word}}</text>
+          <text class="wrong-phonetic">{{item.word.meaning}}</text>
+        </view>
+        <text class="wrong-type">{{item.typeLabel}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="again">再测一次</button>
+    <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
+  </view>
+
+</view>

@@ -1,0 +1,104 @@
+<view class="page books-page">
+  <!-- 教材列表 -->
+  <view wx:if="{{view === 'list'}}">
+    <view class="page-header">
+      <text class="page-title">我的教材</text>
+      <button class="btn btn-accent btn-sm" style="width:auto; padding:0 32rpx;" bindtap="toggleAddBook">+ 新建</button>
+    </view>
+
+    <view wx:if="{{showAddBook}}" class="card add-form">
+      <input class="form-input" placeholder="教材名称" value="{{newBookName}}" bindinput="onNewBookName" />
+      <button class="btn btn-primary btn-sm btn-block" bindtap="addBook">创建</button>
+    </view>
+
+    <view wx:if="{{books.length === 0}}" class="empty-state">
+      <text>还没有教材，点击上方"新建"创建一个吧</text>
+    </view>
+
+    <view wx:for="{{books}}" wx:key="_id" class="book-card card" bindtap="selectBook" data-id="{{item._id}}">
+      <view class="book-info">
+        <text class="book-name">📚 {{item.name}}</text>
+        <text class="book-meta">{{item.grade || ''}} {{item.publisher || ''}}</text>
+      </view>
+      <text class="book-arrow">→</text>
+    </view>
+  </view>
+
+  <!-- 单元列表 -->
+  <view wx:if="{{view === 'units'}}">
+    <view class="page-header">
+      <text class="page-title">{{currentBook.name}}</text>
+      <button class="btn btn-accent btn-sm" style="width:auto; padding:0 32rpx;" bindtap="toggleAddUnit">+ 单元</button>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="startPracticeBook">整本练习</button>
+
+    <view wx:if="{{showAddUnit}}" class="card add-form">
+      <input class="form-input" placeholder="单元名称（如 Unit 1）" value="{{newUnitName}}" bindinput="onNewUnitName" />
+      <button class="btn btn-primary btn-sm btn-block" bindtap="addUnit">创建</button>
+    </view>
+
+    <view wx:if="{{units.length === 0}}" class="empty-state">
+      <text>还没有单元，点击"+ 单元"创建</text>
+    </view>
+
+    <view wx:for="{{units}}" wx:key="_id" class="unit-card card">
+      <view class="unit-info" bindtap="selectUnit" data-id="{{item._id}}">
+        <text class="unit-name">{{item.name}}</text>
+        <text class="unit-meta">{{item.wordCount || 0}} 词</text>
+      </view>
+      <view class="unit-actions">
+        <text class="action-link" bindtap="startPracticeUnit" data-id="{{item._id}}">练习</text>
+        <text class="action-link danger" bindtap="deleteUnit" data-id="{{item._id}}">删除</text>
+      </view>
+    </view>
+
+    <button class="btn btn-secondary btn-block" bindtap="goBack">返回教材列表</button>
+  </view>
+
+  <!-- 单词列表 -->
+  <view wx:if="{{view === 'words'}}">
+    <view class="page-header">
+      <text class="page-title">{{currentBook.name}} · {{currentUnit.name}}</text>
+      <button class="btn btn-accent btn-sm" style="width:auto; padding:0 32rpx;" bindtap="toggleAddWord">+ 新增</button>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="startPracticeUnit" data-id="{{currentUnit._id}}">开始练习</button>
+
+    <!-- 新增单词表单 -->
+    <view wx:if="{{showAddWord}}" class="card add-form add-word-form">
+      <input class="form-input" placeholder="英文单词 *" value="{{newWord.word}}" bindinput="onNewWordInput" data-field="word" />
+      <input class="form-input" placeholder="中文释义 *" value="{{newWord.meaning}}" bindinput="onNewWordInput" data-field="meaning" />
+      <input class="form-input" placeholder="音标（可选）" value="{{newWord.phonetic}}" bindinput="onNewWordInput" data-field="phonetic" />
+      <input class="form-input" placeholder="例句（可选）" value="{{newWord.example}}" bindinput="onNewWordInput" data-field="example" />
+      <input class="form-input" placeholder="例句翻译（可选）" value="{{newWord.exampleTranslation}}" bindinput="onNewWordInput" data-field="exampleTranslation" />
+      <view class="form-row">
+        <button class="btn btn-primary btn-sm" style="flex:1;" bindtap="addWord">添加</button>
+        <button class="btn btn-secondary btn-sm" style="flex:1;" bindtap="toggleAddWord">取消</button>
+      </view>
+    </view>
+
+    <view class="word-count-bar">
+      <text class="word-count-text">共 {{words.length}} 词</text>
+    </view>
+
+    <view class="card word-list">
+      <view wx:if="{{words.length === 0}}" class="empty-state">该单元暂无单词</view>
+      <view wx:for="{{words}}" wx:key="_id" class="word-row">
+        <view class="word-left">
+          <view class="word-text-row">
+            <text class="word-text">{{item.word}}</text>
+            <text class="speak-icon" bindtap="speakWord" data-word="{{item.word}}">🔊</text>
+          </view>
+          <text class="word-phonetic">{{item.phonetic}}</text>
+        </view>
+        <view class="word-right">
+          <text class="word-meaning">{{item.meaning}}</text>
+          <text class="word-delete" bindtap="deleteWord" data-id="{{item._id}}">删除</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn btn-secondary btn-block" bindtap="goBack">返回单元列表</button>
+  </view>
+</view>

@@ -1,0 +1,97 @@
+<view class="page stats-page">
+  <text class="page-title">学习统计</text>
+
+  <!-- 今日统计 -->
+  <view class="card">
+    <text class="section-title">今日学习</text>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{todayQuestions}}</text>
+        <text class="stat-label">做题数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{todayCorrect}}</text>
+        <text class="stat-label">答对</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{todayAccuracy}}%</text>
+        <text class="stat-label">正确率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 总体统计 -->
+  <view class="card">
+    <text class="section-title">累计数据</text>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{totalQuestions}}</text>
+        <text class="stat-label">总题数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{accuracy}}%</text>
+        <text class="stat-label">总正确率</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{streakDays}}</text>
+        <text class="stat-label">连续打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{totalXP}}</text>
+        <text class="stat-label">总 XP</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错题统计 -->
+  <view class="card">
+    <text class="section-title">错题概况</text>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{totalReviewItems}}</text>
+        <text class="stat-label">总错题</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{masteredItems}}</text>
+        <text class="stat-label">已掌握</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value text-error">{{highPriorityItems}}</text>
+        <text class="stat-label">重点复习</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 7天趋势 -->
+  <view class="card">
+    <text class="section-title">近 7 天趋势</text>
+    <view class="trend-chart">
+      <view wx:for="{{weekTrend}}" wx:key="date" class="trend-bar-wrap">
+        <view class="trend-bar" style="height: {{item.count > 0 ? Math.max(20, item.count * 10) : 8}}rpx;">
+          <view class="trend-bar-fill" style="height: {{item.count > 0 ? (item.correct / item.count * 100) : 0}}%;"></view>
+        </view>
+        <text class="trend-label">{{item.label}}</text>
+        <text class="trend-count">{{item.count}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 教材统计 -->
+  <view wx:if="{{bookStats.length > 0}}" class="card">
+    <text class="section-title">教材掌握度</text>
+    <view wx:for="{{bookStats}}" wx:key="name" class="book-stat-row">
+      <view class="book-stat-info">
+        <text class="book-stat-name">{{item.name}}</text>
+        <text class="book-stat-meta">{{item.wordCount}} 词 · 已练 {{item.practiceCount}} 题</text>
+      </view>
+      <view class="book-stat-progress">
+        <view class="progress-mini">
+          <view class="progress-mini-fill" style="width: {{item.accuracy}}%;"></view>
+        </view>
+        <text class="book-stat-accuracy">{{item.accuracy}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
+</view>

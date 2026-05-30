@@ -1,133 +1,205 @@
 .index-page {
+  padding: 24rpx 32rpx;
+}
+
+/* ── 顶部统计条 ── */
+
+.top-stats {
   display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-}
-
-.hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 250rpx;
-  border-radius: 20rpx;
-  padding: 36rpx;
-  background: #1f2937;
-  color: #ffffff;
-}
-
-.eyebrow,
-.title,
-.subtitle {
-  display: block;
-}
-
-.eyebrow {
-  color: #a7f3d0;
-  font-size: 24rpx;
-  margin-bottom: 18rpx;
-}
-
-.title {
-  font-size: 48rpx;
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.subtitle {
-  width: 410rpx;
-  margin-top: 18rpx;
-  color: #d1d5db;
-  line-height: 1.6;
-}
-
-.score-box {
-  width: 128rpx;
-  height: 128rpx;
-  border: 2rpx solid rgba(255, 255, 255, 0.28);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-}
-
-.score-number {
-  font-size: 44rpx;
-  font-weight: 800;
-}
-
-.score-label {
-  color: #d1d5db;
-  font-size: 22rpx;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 16rpx;
+  margin-bottom: 32rpx;
 }
 
-.stat {
-  min-height: 128rpx;
-  border: 1rpx solid #e6e9f0;
-  border-radius: 14rpx;
-  background: #ffffff;
+/* ── 进度环 ── */
+
+.progress-ring-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48rpx 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.ring-wrapper {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+}
+
+.ring-canvas {
+  width: 320rpx;
+  height: 320rpx;
+}
+
+.ring-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-.stat-value {
-  font-size: 38rpx;
+.ring-percent {
+  font-size: 56rpx;
   font-weight: 800;
+  color: #58CC02;
+  line-height: 1;
 }
 
-.stat-label {
-  margin-top: 8rpx;
-  color: #6b7280;
+.ring-label {
   font-size: 22rpx;
+  color: #777777;
+  margin-top: 8rpx;
 }
 
-.import-button {
-  margin-top: 0;
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: 700;
-  margin-bottom: 16rpx;
-}
-
-.word-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 0;
-  border-top: 1rpx solid #eef2f7;
-}
-
-.word-row:first-of-type {
-  border-top: 0;
-}
-
-.word,
-.phonetic {
-  display: block;
-}
-
-.word {
-  font-size: 34rpx;
-  font-weight: 700;
-}
-
-.phonetic {
-  color: #6b7280;
+.ring-detail {
   font-size: 24rpx;
+  color: #3C3C3C;
+  font-weight: 600;
   margin-top: 4rpx;
 }
 
-.meaning {
-  color: #172033;
+/* ── 快捷入口 ── */
+
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.entry-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36rpx 16rpx;
+  margin-bottom: 0;
+  position: relative;
+  transition: transform 0.1s;
+}
+
+.entry-card:active {
+  transform: scale(0.96);
+}
+
+.entry-icon {
+  font-size: 56rpx;
+  margin-bottom: 12rpx;
+}
+
+.entry-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #3C3C3C;
+}
+
+.entry-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  background: #FF4B4B;
+  color: #ffffff;
+  font-size: 22rpx;
+  font-weight: 700;
+  min-width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  padding: 0 10rpx;
+}
+
+/* ── 每日任务 ── */
+
+.daily-quests {
+  margin-bottom: 24rpx;
+}
+
+.quest-row {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.quest-row:last-child {
+  border-bottom: none;
+}
+
+.quest-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+
+.quest-name {
+  flex: 1;
+  font-size: 28rpx;
+  color: #3C3C3C;
+}
+
+.quest-name.completed {
+  color: #777777;
+  text-decoration: line-through;
+}
+
+.quest-progress {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.quest-count {
+  font-size: 24rpx;
+  color: #777777;
   font-weight: 600;
+}
+
+.quest-check {
+  font-size: 28rpx;
+}
+
+/* ── 复习提醒 ── */
+
+.review-reminder {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  margin-bottom: 24rpx;
+  background: #FFF8E1;
+  border-left: 8rpx solid #FFC800;
+}
+
+.reminder-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+
+.reminder-text {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3C3C3C;
+}
+
+.reminder-arrow {
+  font-size: 32rpx;
+  color: #FFC800;
+  font-weight: 700;
+}
+
+/* ── 导入入口 ── */
+
+.import-entry {
+  text-align: center;
+  padding: 24rpx;
+}
+
+.import-text {
+  font-size: 26rpx;
+  color: #777777;
 }

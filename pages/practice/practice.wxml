@@ -1,33 +1,111 @@
 <view class="page practice-page">
-  <view class="progress">
-    <text>{{currentIndex + 1}} / {{questions.length}}</text>
-    <view class="progress-track">
-      <view class="progress-bar" style="width: {{progressPercent}}%;"></view>
+  <!-- 进度条 -->
+  <view class="progress-section">
+    <text class="progress-text">{{currentIndex + 1}} / {{questions.length}}</text>
+    <view class="progress-bar-wrap">
+      <view class="progress-bar-fill" style="width: {{progressPercent}}%;"></view>
     </view>
   </view>
 
-  <view class="panel question-card">
-    <text class="question-type">{{currentQuestion.typeLabel}}</text>
-    <text class="question-title">{{currentQuestion.prompt}}</text>
-    <text class="question-hint">{{currentQuestion.hint}}</text>
+  <!-- XP 飞入动画 -->
+  <view wx:if="{{showFloatingXP}}" class="floating-xp anim-fade-up">
+    +{{floatingXP}} XP
   </view>
 
-  <view class="options">
+  <!-- 撒花粒子 -->
+  <view wx:if="{{confettiParticles.length > 0}}" class="confetti-layer">
+    <view
+      wx:for="{{confettiParticles}}"
+      wx:key="id"
+      class="confetti-particle"
+      style="left: {{item.left}}rpx; background: {{item.color}}; width: {{item.size}}rpx; height: {{item.size}}rpx; animation-delay: {{item.delay}}ms;"
+    ></view>
+  </view>
+
+  <!-- 题目卡片 -->
+  <view class="question-card card {{shakeCard ? 'anim-shake' : ''}} {{answered ? (answerResult === 'correct' ? 'card-correct' : 'card-wrong') : ''}}">
+    <text class="question-type">{{currentQuestion.typeLabel}}</text>
+    <view class="question-prompt-row">
+      <text class="question-prompt">{{currentQuestion.prompt}}</text>
+      <text class="speak-btn" bindtap="speakWord">🔊</text>
+    </view>
+    <text wx:if="{{currentQuestion.hint}}" class="question-hint">{{currentQuestion.hint}}</text>
+  </view>
+
+  <!-- 选择题选项 (meaning / word / cloze) -->
+  <view wx:if="{{currentQuestion.type === 'meaning' || currentQuestion.type === 'word' || currentQuestion.type === 'cloze'}}" class="options-area {{answered ? 'disabled' : ''}}">
     <button
       wx:for="{{currentQuestion.options}}"
       wx:key="value"
-      class="option {{selectedValue === item.value ? 'selected' : ''}}"
+      class="option-btn {{answered && item.value === currentQuestion.answer ? 'correct' : ''}} {{answered && selectedValue === item.value && item.value !== currentQuestion.answer ? 'wrong' : ''}} {{!answered && selectedValue === item.value ? 'selected' : ''}}"
       bindtap="selectOption"
       data-value="{{item.value}}"
+      disabled="{{answered}}"
     >
-      {{item.label}}
+      <text class="option-label">{{item.label}}</text>
+      <view class="option-icon">
+        <text wx:if="{{answered && item.value === currentQuestion.answer}}">✅</text>
+        <text wx:if="{{answered && selectedValue === item.value && item.value !== currentQuestion.answer}}">❌</text>
+      </view>
     </button>
   </view>
 
-  <view wx:if="{{feedback}}" class="feedback {{feedback.correct ? 'right' : 'wrong'}}">
-    <text class="feedback-title">{{feedback.title}}</text>
-    <text class="feedback-detail">{{feedback.detail}}</text>
+  <!-- 拼写题 -->
+  <view wx:if="{{currentQuestion.type === 'spelling'}}" class="spelling-area">
+    <view class="scrambled-box">
+      <text class="scrambled-label">打乱字母提示</text>
+      <text class="scrambled-letters">{{currentQuestion.scrambled}}</text>
+    </view>
+    <view class="spelling-input-row">
+      <input
+        class="spelling-input"
+        placeholder="输入单词拼写"
+        value="{{spellingInput}}"
+        bindinput="onSpellingInput"
+        confirm-type="done"
+        bindconfirm="submitSpelling"
+        disabled="{{answered}}"
+      />
+      <button wx:if="{{!answered}}" class="btn btn-accent btn-sm spelling-submit" bindtap="submitSpelling">确认</button>
+    </view>
+    <view wx:if="{{answered}}" class="spelling-answer {{answerResult}}">
+      <text wx:if="{{answerResult === 'correct'}}">✅ 正确！</text>
+      <text wx:if="{{answerResult === 'wrong'}}">❌ 正确答案：{{currentQuestion.answerDisplay}}</text>
+    </view>
   </view>
 
-  <button class="primary-button" bindtap="submitOrNext">{{buttonText}}</button>
+  <!-- 配对题 -->
+  <view wx:if="{{currentQuestion.type === 'matching'}}" class="matching-area">
+    <view class="matching-status">
+      <text>已配对 {{matchedCount}} / {{currentQuestion.pairs.length}}</text>
+    </view>
+    <view class="matching-columns">
+      <view class="matching-col">
+        <text class="col-title">单词</text>
+        <view
+          wx:for="{{currentQuestion.shuffledWords}}"
+          wx:key="wordId"
+          class="match-item {{matchingSelected === item.wordId ? 'selected' : ''}} {{matchingPairs[item.wordId] ? 'matched' : ''}}"
+          bindtap="selectMatchWord"
+          data-id="{{item.wordId}}"
+        >{{item.word}}</view>
+      </view>
+      <view class="matching-col">
+        <text class="col-title">释义</text>
+        <view
+          wx:for="{{currentQuestion.shuffledMeanings}}"
+          wx:key="wordId"
+          class="match-item {{matchingDone ? 'matched' : ''}}"
+          bindtap="selectMatchMeaning"
+          data-id="{{item.wordId}}"
+        >{{item.meaning}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 答对/答错反馈条 -->
+  <view wx:if="{{answered && currentQuestion.type !== 'matching'}}" class="feedback-bar {{answerResult}}">
+    <text wx:if="{{answerResult === 'correct'}}">答对了！🎉 +{{roundXP}} XP</text>
+    <text wx:if="{{answerResult === 'wrong'}}">正确答案：{{currentQuestion.word.word}} = {{currentQuestion.word.meaning}}</text>
+  </view>
 </view>

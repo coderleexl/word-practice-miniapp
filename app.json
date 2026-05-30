@@ -1,9 +1,13 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/books/books",
     "pages/import/import",
     "pages/practice/practice",
-    "pages/result/result"
+    "pages/exam/exam",
+    "pages/review/review",
+    "pages/result/result",
+    "pages/stats/stats"
   ],
   "window": {
     "navigationBarTitleText": "单词练习",

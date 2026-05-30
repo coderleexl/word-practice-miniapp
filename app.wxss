@@ -1,42 +1,311 @@
+/* ══════════════════════════════════════════
+   Duolingo 风格设计系统
+   ══════════════════════════════════════════ */
+
 page {
-  background: #f6f7fb;
-  color: #172033;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #F7F8FA;
+  color: #3C3C3C;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   font-size: 28rpx;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── 页面容器 ── */
 
 .page {
   min-height: 100vh;
   box-sizing: border-box;
   padding: 32rpx;
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
 }
 
-.panel {
+/* ── 卡片 ── */
+
+.card {
   background: #ffffff;
-  border: 1rpx solid #e6e9f0;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.card-flat {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+/* ── 按钮 ── */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
   border-radius: 16rpx;
-  padding: 28rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  border: none;
+  transition: transform 0.1s;
 }
 
-.primary-button {
-  height: 88rpx;
-  border-radius: 12rpx;
-  background: #2f7dff;
+.btn::after {
+  display: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #58CC02;
   color: #ffffff;
-  font-weight: 600;
-  line-height: 88rpx;
+  box-shadow: 0 6rpx 0 #46a302, 0 8rpx 20rpx rgba(88, 204, 2, 0.3);
 }
 
-.secondary-button {
-  height: 88rpx;
-  border: 1rpx solid #cbd5e1;
-  border-radius: 12rpx;
+.btn-primary:active {
+  box-shadow: 0 2rpx 0 #46a302;
+  transform: translateY(4rpx) scale(0.97);
+}
+
+.btn-accent {
+  background: #1CB0F6;
+  color: #ffffff;
+  box-shadow: 0 6rpx 0 #1899d6, 0 8rpx 20rpx rgba(28, 176, 246, 0.3);
+}
+
+.btn-accent:active {
+  box-shadow: 0 2rpx 0 #1899d6;
+  transform: translateY(4rpx) scale(0.97);
+}
+
+.btn-secondary {
   background: #ffffff;
-  color: #172033;
-  font-weight: 600;
-  line-height: 88rpx;
+  color: #3C3C3C;
+  border: 3rpx solid #E5E5E5;
+  box-shadow: 0 4rpx 0 #d4d4d4;
 }
 
-.muted {
-  color: #6b7280;
+.btn-secondary:active {
+  box-shadow: 0 1rpx 0 #d4d4d4;
+  transform: translateY(3rpx) scale(0.97);
+}
+
+.btn-danger {
+  background: #FF4B4B;
+  color: #ffffff;
+  box-shadow: 0 6rpx 0 #d43d3d, 0 8rpx 20rpx rgba(255, 75, 75, 0.3);
+}
+
+.btn-sm {
+  height: 72rpx;
+  font-size: 28rpx;
+  border-radius: 14rpx;
+}
+
+.btn-block {
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+
+/* ── 选项按钮（练习用） ── */
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  min-height: 96rpx;
+  padding: 24rpx 32rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  border: 3rpx solid #E5E5E5;
+  box-shadow: 0 4rpx 0 #d4d4d4;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #3C3C3C;
+  transition: all 0.15s;
+  margin-bottom: 20rpx;
+}
+
+.option-btn::after {
+  display: none;
+}
+
+.option-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 0 #d4d4d4;
+}
+
+.option-btn.selected {
+  border-color: #1CB0F6;
+  background: #ddf3ff;
+  color: #1CB0F6;
+}
+
+.option-btn.correct {
+  background: #58CC02;
+  border-color: #58CC02;
+  color: #ffffff;
+  box-shadow: 0 4rpx 0 #46a302;
+}
+
+.option-btn.wrong {
+  background: #FF4B4B;
+  border-color: #FF4B4B;
+  color: #ffffff;
+  box-shadow: 0 4rpx 0 #d43d3d;
+}
+
+.option-btn.reveal {
+  background: #d7ffb8;
+  border-color: #58CC02;
+  color: #58CC02;
+}
+
+.option-label {
+  flex: 1;
+}
+
+.option-icon {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16rpx;
+  font-size: 36rpx;
+}
+
+/* ── 进度条 ── */
+
+.progress-bar-wrap {
+  height: 20rpx;
+  background: #E5E5E5;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #58CC02;
+  border-radius: 999rpx;
+  transition: width 0.4s ease;
+}
+
+.progress-bar-accent {
+  background: #1CB0F6;
+}
+
+/* ── 统计数字 ── */
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.stat-chip-fire {
+  color: #FF4B4B;
+}
+
+.stat-chip-xp {
+  color: #FFC800;
+}
+
+.stat-chip-book {
+  color: #1CB0F6;
+}
+
+/* ── 标题 ── */
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #3C3C3C;
+  margin-bottom: 20rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #3C3C3C;
+  margin-bottom: 8rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #777777;
+  margin-bottom: 24rpx;
+}
+
+/* ── 空状态 ── */
+
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #777777;
+  font-size: 28rpx;
+}
+
+/* ── 动画关键帧 ── */
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-16rpx); }
+  40% { transform: translateX(16rpx); }
+  60% { transform: translateX(-12rpx); }
+  80% { transform: translateX(12rpx); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(20rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes xpFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-200rpx) scale(0.6); opacity: 0; }
+}
+
+.anim-slide-in {
+  animation: slideInRight 0.35s ease-out;
+}
+
+.anim-slide-out {
+  animation: slideOutLeft 0.3s ease-in;
+}
+
+.anim-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.anim-pop {
+  animation: popIn 0.3s ease-out;
+}
+
+.anim-fade-up {
+  animation: fadeUp 0.3s ease-out;
 }

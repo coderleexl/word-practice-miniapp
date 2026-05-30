@@ -1,22 +1,129 @@
 <view class="page import-page">
-  <view class="panel">
-    <text class="title">教材导入</text>
-    <text class="desc">一期先放入本地示例词表。后续会支持粘贴文本、CSV 导入和云端保存。</text>
+  <text class="page-title">导入词表</text>
+  <text class="page-subtitle">粘贴 CSV 文本，快速导入教材单词。</text>
+
+  <!-- 粘贴区 -->
+  <view class="card">
+    <text class="section-title">粘贴 CSV 内容</text>
+    <textarea
+      class="paste-area"
+      placeholder="book,unit,word,phonetic,meaning,example&#10;示例教材,Unit 1,apple,/ˈæpəl/,苹果,I eat an apple every day."
+      value="{{pasteText}}"
+      bindinput="onPasteInput"
+      auto-height
+      maxlength="50000"
+    />
+    <button class="btn btn-accent btn-block" bindtap="preview">解析预览</button>
   </view>
 
-  <view class="panel">
-    <view class="section-title">CSV 字段</view>
+  <!-- 字段说明 -->
+  <view class="card">
+    <text class="section-title">支持字段</text>
     <view wx:for="{{fields}}" wx:key="name" class="field-row">
-      <text class="field-name">{{item.name}}</text>
+      <text class="field-name {{item.required ? 'required' : ''}}">{{item.name}}{{item.required ? ' *' : ''}}</text>
       <text class="field-desc">{{item.desc}}</text>
     </view>
   </view>
 
-  <view class="panel sample">
-    <view class="section-title">示例</view>
-    <text class="code">book,unit,word,phonetic,meaning,example</text>
-    <text class="code">示例教材,Unit 1,apple,/ˈæpəl/,苹果,I eat an apple every day.</text>
+  <!-- 字段映射 -->
+  <view wx:if="{{showMapping}}" class="card">
+    <text class="section-title">字段映射</text>
+    <text class="mapping-hint">请确认 CSV 列与字段的对应关系</text>
+
+    <view class="mapping-list">
+      <view wx:for="{{mappingRows}}" wx:key="index" class="mapping-row">
+        <text class="mapping-source">{{item.source}}</text>
+        <text class="mapping-arrow">→</text>
+        <picker mode="selector" range="{{targetFields}}" range-key="desc" value="{{item.targetIndex}}" bindchange="onMappingChange" data-index="{{index}}">
+          <view class="mapping-target">
+            <text>{{item.targetName || '请选择字段'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="confirmMapping">确认映射</button>
   </view>
 
-  <button class="primary-button" bindtap="backHome">返回首页</button>
+  <!-- 预览结果 -->
+  <view wx:if="{{showPreview}}" class="card">
+    <text class="section-title">预览（前 20 行）</text>
+    <view class="preview-stats">
+      <text>共 {{totalRows}} 行 · 有效 {{validRows}} · 错误 {{errorRows}}</text>
+    </view>
+    <scroll-view scroll-x class="preview-table-wrap">
+      <view class="preview-table">
+        <view class="preview-row preview-header">
+          <text wx:for="{{previewHeaders}}" wx:key="*this" class="preview-cell">{{item}}</text>
+        </view>
+        <view wx:for="{{previewRows}}" wx:key="index" class="preview-row">
+          <text wx:for="{{previewHeaders}}" wx:for-item="col" wx:key="*this" class="preview-cell">{{item[col]}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 导入目标 -->
+    <view class="import-target">
+      <text class="section-title">导入到</text>
+
+      <view wx:if="{{books.length > 0}}" class="book-options">
+        <text class="label">选择已有教材：</text>
+        <view class="chip-row">
+          <view wx:for="{{books}}" wx:key="_id" class="chip {{selectedBookId === item._id ? 'chip-active' : ''}}" bindtap="selectBook" data-id="{{item._id}}">{{item.name}}</view>
+        </view>
+      </view>
+
+      <view class="form-group">
+        <text class="label">或新建教材：</text>
+        <input class="form-input" placeholder="教材名称" value="{{newBookName}}" bindinput="onNewBookName" />
+      </view>
+
+      <view class="form-group">
+        <text class="label">单元名称：</text>
+        <input class="form-input" placeholder="默认：默认单元" value="{{newUnitName}}" bindinput="onNewUnitName" />
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="doImport" disabled="{{importing}}">
+      {{importing ? '导入中...' : '确认导入 ' + validRows + ' 词'}}
+    </button>
+  </view>
+
+  <!-- 在线词库 -->
+  <view class="card">
+    <text class="section-title">在线词库</text>
+    <text class="load-hint">从GitHub加载54,000+词库（免费）</text>
+
+    <view wx:if="{{githubIndex}}" class="github-list">
+      <view wx:for="{{githubIndex.books}}" wx:key="id" class="github-item">
+        <view class="github-info">
+          <text class="github-name">{{item.name}}</text>
+          <text class="github-count">{{item.wordCount}} 词</text>
+        </view>
+        <button
+          class="btn btn-sm {{item.loaded ? 'btn-secondary' : 'btn-primary'}}"
+          bindtap="loadFromGithub"
+          data-file="{{item.file}}"
+          data-name="{{item.name}}"
+          disabled="{{item.loaded || loading}}"
+        >
+          {{item.loaded ? '已加载' : '加载'}}
+        </button>
+      </view>
+    </view>
+
+    <button wx:if="{{!githubIndex}}" class="btn btn-accent btn-block" bindtap="fetchGithubIndex" disabled="{{loading}}">
+      {{loading ? '加载中...' : '获取在线词库列表'}}
+    </button>
+  </view>
+
+  <!-- 示例数据加载 -->
+  <view class="card">
+    <text class="section-title">快速开始</text>
+    <text class="load-hint">没有数据？点击下方按钮加载示例词库</text>
+    <button class="btn btn-accent btn-block" bindtap="loadSampleData">加载示例词库（209词）</button>
+  </view>
+
+  <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
 </view>

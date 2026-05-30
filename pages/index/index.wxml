@@ -1,42 +1,76 @@
 <view class="page index-page">
-  <view class="hero">
-    <view>
-      <text class="eyebrow">示例教材 · Unit 1</text>
-      <text class="title">今日单词练习</text>
-      <text class="subtitle">用 5 道题快速完成一次教材单元复习。</text>
+  <!-- 顶部统计条 -->
+  <view class="top-stats">
+    <view class="stat-chip stat-chip-fire">
+      <text>🔥 {{streakDays}}天</text>
     </view>
-    <view class="score-box">
-      <text class="score-number">{{wordCount}}</text>
-      <text class="score-label">词</text>
+    <view class="stat-chip stat-chip-xp">
+      <text>⭐ {{totalXP}} XP</text>
     </view>
-  </view>
-
-  <view class="stats">
-    <view class="stat">
-      <text class="stat-value">{{wordCount}}</text>
-      <text class="stat-label">本单元词数</text>
-    </view>
-    <view class="stat">
-      <text class="stat-value">5</text>
-      <text class="stat-label">练习题</text>
-    </view>
-    <view class="stat">
-      <text class="stat-value">{{lastScore}}</text>
-      <text class="stat-label">上次得分</text>
+    <view class="stat-chip stat-chip-book">
+      <text>📖 {{todayCount}}题</text>
     </view>
   </view>
 
-  <button class="primary-button" bindtap="startPractice">开始练习</button>
-  <button class="secondary-button import-button" bindtap="goImport">导入教材</button>
-
-  <view class="panel word-panel">
-    <view class="section-title">本单元词表</view>
-    <view wx:for="{{words}}" wx:key="id" class="word-row">
-      <view>
-        <text class="word">{{item.word}}</text>
-        <text class="phonetic">{{item.phonetic}}</text>
+  <!-- 今日进度环 -->
+  <view class="progress-ring-card card">
+    <view class="ring-wrapper">
+      <canvas canvas-id="progressRing" class="ring-canvas" />
+      <view class="ring-center">
+        <text class="ring-percent">{{progressPercent}}%</text>
+        <text class="ring-label">今日目标</text>
+        <text class="ring-detail">{{progressDone}}/{{progressTarget}} 题</text>
       </view>
-      <text class="meaning">{{item.meaning}}</text>
     </view>
+  </view>
+
+  <!-- 快捷入口网格 -->
+  <view class="entry-grid">
+    <view class="entry-card card" bindtap="goPractice">
+      <text class="entry-icon">📝</text>
+      <text class="entry-name">练习</text>
+    </view>
+    <view class="entry-card card" bindtap="goReview">
+      <text class="entry-icon">📖</text>
+      <text class="entry-name">复习</text>
+      <view wx:if="{{dueReviewCount > 0}}" class="entry-badge">{{dueReviewCount}}</view>
+    </view>
+    <view class="entry-card card" bindtap="goExam">
+      <text class="entry-icon">🎯</text>
+      <text class="entry-name">测试</text>
+    </view>
+    <view class="entry-card card" bindtap="goBooks">
+      <text class="entry-icon">📚</text>
+      <text class="entry-name">教材</text>
+    </view>
+    <view class="entry-card card" bindtap="goStats">
+      <text class="entry-icon">📊</text>
+      <text class="entry-name">统计</text>
+    </view>
+  </view>
+
+  <!-- 每日任务 -->
+  <view class="daily-quests card">
+    <text class="section-title">每日任务</text>
+    <view wx:for="{{dailyQuests}}" wx:key="key" class="quest-row">
+      <text class="quest-icon">{{item.icon}}</text>
+      <text class="quest-name {{item.completed ? 'completed' : ''}}">{{item.name}}</text>
+      <view class="quest-progress">
+        <text class="quest-count">{{item.done}}/{{item.target}}</text>
+        <text wx:if="{{item.completed}}" class="quest-check">✅</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 复习提醒 -->
+  <view wx:if="{{dueReviewCount > 0}}" class="review-reminder card" bindtap="goReview">
+    <text class="reminder-icon">📖</text>
+    <text class="reminder-text">有 {{dueReviewCount}} 个错题待复习</text>
+    <text class="reminder-arrow">→</text>
+  </view>
+
+  <!-- 导入入口 -->
+  <view class="import-entry" bindtap="goImport">
+    <text class="import-text">📥 导入词表</text>
   </view>
 </view>

@@ -1,19 +1,44 @@
 <view class="page result-page">
-  <view class="result-hero">
-    <text class="score">{{result.score}}</text>
-    <text class="score-unit">分</text>
-    <text class="summary">{{result.correctCount}} / {{result.total}} 答对</text>
+  <!-- 撒花（高分时） -->
+  <view wx:if="{{showConfetti}}" class="confetti-layer">
+    <view
+      wx:for="{{[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}}"
+      wx:key="*this"
+      class="confetti-particle"
+      style="left: {{item * 45 + 20}}rpx; background: {{item % 3 === 0 ? '#58CC02' : item % 3 === 1 ? '#1CB0F6' : '#FFC800'}}; animation-delay: {{item * 80}}ms;"
+    ></view>
   </view>
 
-  <view class="panel">
-    <view class="section-title">错题复习</view>
-    <view wx:if="{{wrongQuestions.length === 0}}" class="empty">本轮没有错题</view>
-    <view wx:for="{{wrongQuestions}}" wx:key="id" class="wrong-row">
-      <text class="word">{{item.word.word}}</text>
-      <text class="meaning">{{item.word.meaning}}</text>
+  <!-- 成绩卡片 -->
+  <view class="score-card card">
+    <text class="result-emoji">{{emoji}}</text>
+    <text class="result-title">{{title}}</text>
+    <text class="result-score">{{score}}</text>
+    <text class="result-score-label">分</text>
+    <text class="result-detail">{{correctCount}} / {{total}} 答对</text>
+    <view wx:if="{{earnedXP > 0}}" class="xp-earned">
+      <text>⭐ +{{earnedXP}} XP</text>
     </view>
   </view>
 
-  <button class="primary-button" bindtap="again">再练一次</button>
-  <button class="secondary-button" bindtap="backHome">返回首页</button>
+  <!-- 错题列表 -->
+  <view wx:if="{{wrongQuestions.length > 0}}" class="wrong-section card">
+    <text class="section-title">错题回顾</text>
+    <view wx:for="{{wrongQuestions}}" wx:key="id" class="wrong-item">
+      <view class="wrong-word">
+        <text class="wrong-en">{{item.word.word}}</text>
+        <text class="wrong-phonetic">{{item.word.phonetic}}</text>
+      </view>
+      <text class="wrong-meaning">{{item.word.meaning}}</text>
+      <text class="wrong-type">{{item.typeLabel}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <button class="btn btn-primary btn-block" bindtap="again">再练一次</button>
+  <button class="btn btn-accent btn-block" bindtap="aiGenerate" disabled="{{aiLoading}}">
+    {{aiLoading ? 'AI生成中...' : '🤖 AI出题'}}
+  </button>
+  <button wx:if="{{wrongQuestions.length > 0}}" class="btn btn-secondary btn-block" bindtap="goReview">查看错题本</button>
+  <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
 </view>

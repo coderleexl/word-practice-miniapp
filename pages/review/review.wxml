@@ -1,0 +1,38 @@
+<view class="page review-page">
+  <text class="page-title">错题本</text>
+
+  <!-- 筛选 -->
+  <view class="tab-bar">
+    <view class="tab {{filterTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tab {{filterTab === 'due' ? 'active' : ''}}" bindtap="switchTab" data-tab="due">待复习</view>
+    <view class="tab {{filterTab === 'high' ? 'active' : ''}}" bindtap="switchTab" data-tab="high">重点</view>
+    <view class="tab {{filterTab === 'mastered' ? 'active' : ''}}" bindtap="switchTab" data-tab="mastered">已掌握</view>
+  </view>
+
+  <button class="btn btn-primary btn-block" bindtap="startReview">开始复习</button>
+
+  <view wx:if="{{filteredItems.length === 0}}" class="empty-state">
+    <text>{{emptyText}}</text>
+  </view>
+
+  <view wx:for="{{filteredItems}}" wx:key="_id" class="review-card card {{item.priority === 'high' ? 'review-high' : ''}}">
+    <view class="review-top">
+      <view class="review-word">
+        <text class="word-text">{{item.word.word}}</text>
+        <text class="word-phonetic">{{item.word.phonetic}}</text>
+      </view>
+      <view wx:if="{{item.mastered}}" class="mastered-badge">✅ 已掌握</view>
+      <view wx:if="{{item.priority === 'high'}}" class="priority-badge">🔥 重点</view>
+    </view>
+    <text class="word-meaning">{{item.word.meaning}}</text>
+    <view class="review-meta">
+      <text class="meta-item">错 {{item.wrongCount}} 次</text>
+      <text class="meta-item review-hint">{{item.reviewHint}}</text>
+    </view>
+    <view wx:if="{{!item.mastered}}" class="review-actions">
+      <text class="action-link" bindtap="markMastered" data-id="{{item.wordId}}">标记已掌握</text>
+    </view>
+  </view>
+
+  <button class="btn btn-secondary btn-block" bindtap="backHome">返回首页</button>
+</view>
