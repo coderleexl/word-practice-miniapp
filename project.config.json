@@ -1,7 +1,73 @@
 {
   "description": "单词练习模拟试题小程序",
   "packOptions": {
-    "ignore": []
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "data"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "cloudfunctions"
+      },
+      {
+        "type": "folder",
+        "value": ".cc-connect"
+      },
+      {
+        "type": "folder",
+        "value": ".cc-connect-data"
+      },
+      {
+        "type": "folder",
+        "value": ".codex"
+      },
+      {
+        "type": "folder",
+        "value": ".agents"
+      },
+      {
+        "type": "file",
+        "value": "AGENTS.md"
+      },
+      {
+        "type": "file",
+        "value": "CLAUDE.md"
+      },
+      {
+        "type": "file",
+        "value": "README.md"
+      },
+      {
+        "type": "file",
+        "value": "config.toml"
+      },
+      {
+        "type": "file",
+        "value": ".config.toml"
+      },
+      {
+        "type": "file",
+        "value": ".config.toml.lock"
+      },
+      {
+        "type": "file",
+        "value": "auto_enable_service.ps1"
+      },
+      {
+        "type": "file",
+        "value": "enable_service_port.ps1"
+      },
+      {
+        "type": "file",
+        "value": "import-sample.csv"
+      }
+    ],
+    "include": []
   },
   "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
@@ -37,7 +103,14 @@
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "compileWorklet": false,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
   "libVersion": "3.8.12",
@@ -47,5 +120,6 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "simulatorPluginLibVersion": {}
 }

@@ -8,6 +8,8 @@ const GITHUB_CONFIG = {
   baseUrl: 'https://cdn.jsdelivr.net/gh/coderleexl/word-vocabulary-data@main'
 }
 
+const CLOUD_FUNCTION_NAME = 'get-vocabulary'
+
 // 词库索引（内置，避免额外请求）
 const VOCABULARY_INDEX = {
   version: '1.0.0',
@@ -23,16 +25,54 @@ const VOCABULARY_INDEX = {
 }
 
 /**
- * 获取词库索引（内置）
+ * 小程序端优先走云函数，避免前端 request 合法域名限制。
+ */
+function callVocabularyCloud(action, file) {
+  if (typeof wx === 'undefined' || !wx.cloud || !wx.cloud.callFunction) {
+    return Promise.reject(new Error('云函数不可用'))
+  }
+
+  return wx.cloud.callFunction({
+    name: CLOUD_FUNCTION_NAME,
+    data: { action: action, file: file }
+  }).then(res => {
+    const result = res.result || {}
+    if (result.success) {
+      return result.data
+    }
+    throw new Error(result.error || '云函数返回失败')
+  })
+}
+
+function cloneIndex(index) {
+  return {
+    ...index,
+    books: (index.books || []).map(book => ({ ...book }))
+  }
+}
+
+function validateVocabularyData(data) {
+  if (!data || !Array.isArray(data.books) || !Array.isArray(data.units) || !Array.isArray(data.words)) {
+    throw new Error('词库数据格式错误')
+  }
+}
+
+/**
+ * 获取词库索引
  */
 function fetchIndex() {
-  return Promise.resolve(VOCABULARY_INDEX)
+  return callVocabularyCloud('index')
+    .then(index => cloneIndex(index))
+    .catch(err => {
+      console.warn('Fetch index from cloud failed, using builtin index:', err)
+      return cloneIndex(VOCABULARY_INDEX)
+    })
 }
 
 /**
  * 从GitHub获取词库
  */
-function fetchVocabulary(file) {
+function fetchVocabularyFromCdn(file) {
   const url = `${GITHUB_CONFIG.baseUrl}/${file}`
   return new Promise((resolve, reject) => {
     wx.request({
@@ -41,7 +81,7 @@ function fetchVocabulary(file) {
         if (res.statusCode === 200) {
           resolve(res.data)
         } else {
-          reject(new Error('下载失败'))
+          reject(new Error('下载失败：' + res.statusCode))
         }
       },
       fail: (err) => {
@@ -49,6 +89,14 @@ function fetchVocabulary(file) {
       }
     })
   })
+}
+
+function fetchVocabulary(file) {
+  return callVocabularyCloud('get', file)
+    .catch(err => {
+      console.warn('Fetch vocabulary from cloud failed, falling back to CDN:', err)
+      return fetchVocabularyFromCdn(file)
+    })
 }
 
 /**
@@ -63,6 +111,7 @@ function loadVocabulary(file, onProgress) {
 
     fetchVocabulary(file)
       .then(data => {
+        validateVocabularyData(data)
         onProgress && onProgress({ stage: 'saving', file, wordCount: data.words.length })
 
         // 合并到现有数据
@@ -78,9 +127,13 @@ function loadVocabulary(file, onProgress) {
         }
 
         // 添加新数据
-        wx.setStorageSync('wp_books', [...existingBooks, ...data.books])
-        wx.setStorageSync('wp_units', [...existingUnits, ...data.units])
-        wx.setStorageSync('wp_words', [...existingWords, ...data.words])
+        try {
+          wx.setStorageSync('wp_books', [...existingBooks, ...data.books])
+          wx.setStorageSync('wp_units', [...existingUnits, ...data.units])
+          wx.setStorageSync('wp_words', [...existingWords, ...data.words])
+        } catch (err) {
+          throw new Error('本地缓存空间不足，词库过大')
+        }
 
         resolve({
           success: true,

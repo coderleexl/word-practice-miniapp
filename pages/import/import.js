@@ -466,9 +466,15 @@ Page({
     var that = this;
     that.setData({ loading: true });
 
-    // 直接使用内置索引
-    var index = vocabLoader.fetchIndex();
-    that.updateIndex(index);
+    vocabLoader.fetchIndex()
+      .then(function (index) {
+        that.updateIndex(index);
+      })
+      .catch(function (err) {
+        console.error("Failed to fetch vocabulary index:", err);
+        wx.showToast({ title: "获取词库列表失败", icon: "none" });
+        that.setData({ loading: false });
+      });
   },
 
   // 更新索引显示
@@ -528,7 +534,7 @@ Page({
             .catch(function (err) {
               wx.hideLoading();
               console.error('Failed to load vocabulary:', err);
-              wx.showToast({ title: "加载失败，请检查网络", icon: "none" });
+              wx.showToast({ title: err.message || "加载失败，请检查网络", icon: "none" });
               that.setData({ loading: false });
             });
         }
